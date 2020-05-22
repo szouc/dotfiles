@@ -1,0 +1,1 @@
+extern void Log(const char * message);
