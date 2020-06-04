@@ -8,7 +8,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'liuchengxu/vim-which-key'
 Plug 'easymotion/vim-easymotion'
 Plug 'NLKNguyen/papercolor-theme'
-" Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-surround'
 Plug 'airblade/vim-gitgutter'
 Plug 'ludovicchabant/vim-gutentags'
@@ -20,14 +20,19 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'Yggdroot/indentLine'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'jackguo380/vim-lsp-cxx-highlight'
 Plug 'dense-analysis/ale'
-Plug 'Yggdroot/LeaderF'
+Plug 'Yggdroot/LeaderF', {'do': './install.sh'}
 Plug 'sbdchd/neoformat'
 Plug 'skywind3000/asynctasks.vim'
 Plug 'skywind3000/asyncrun.vim'
+Plug 'Raimondi/delimitMate'
+Plug 'junegunn/fzf', {'do': { -> fzf#install() }}
+Plug 'junegunn/fzf.vim'
 call plug#end()
 " :PlugInstall
 " :PlugUpgrade
+" :PlugClean
 
 let mapleader=','
 let g:mapleader=','
@@ -58,19 +63,26 @@ set softtabstop=4
 set backspace=2
 set textwidth=112
 set number
-set relativenumber
-function! ToggleRelativeOn()
-    set nu!
-    set rnu
-endfunction
-function! ToggleNumbersOn()
-    set rnu!
-    set nu
-endfunction
-autocmd FocusLost * call ToggleNumbersOn()
-autocmd FocusGained * call ToggleRelativeOn()
-autocmd InsertEnter * call ToggleNumbersOn()
-autocmd InsertLeave * call ToggleRelativeOn()
+" set relativenumber
+" function! ToggleRelativeOn()
+"     set nu!
+"     set rnu
+" endfunction
+" function! ToggleNumbersOn()
+"     set rnu!
+"     set nu
+" endfunction
+" autocmd FocusLost * call ToggleNumbersOn()
+" autocmd FocusGained * call ToggleRelativeOn()
+" autocmd InsertEnter * call ToggleNumbersOn()
+" autocmd InsertLeave * call ToggleRelativeOn()
+augroup relative_nubmer
+    autocmd!
+    autocmd FocusLost * : set norelativenumber
+    autocmd FocusGained * : set relativenumber
+    autocmd InsertEnter * : set norelativenumber
+    autocmd InsertLeave * : set relativenumber
+augroup END
 set numberwidth=5
 set mouse=a
 set mousemodel=popup
@@ -84,6 +96,12 @@ set cursorline
 set wildmenu
 set wildmode=list:longest,full
 set guicursor=n-v-c:hor20
+set hidden
+set noundofile
+set nowritebackup
+set cmdheight=2
+set updatetime=300
+set shortmess+=c
 
 set background=dark
 colorscheme PaperColor
@@ -96,6 +114,8 @@ function! ToggleBG()
     endif
 endfunction
 noremap <leader>bg :call ToggleBG()<CR>
+
+let g:lsp_cxx_hl_use_text_props = 1
 
 nnoremap <Up> <C-w>10+
 nnoremap <Down> <C-w>10-
@@ -115,31 +135,23 @@ noremap <C-L> <C-W>l
 "     endif
 " endfunction 
 
-" if &term == 'win32'
-"     let &t_ti.=" \e[1 q"
-"     let &t_SI=" \e[5 q-- INSERT --"
-"     let &t_EI=" \e[1 q"
-"     let &t_te.=" \e[0 q"
-" else
-"     let &t_ti.=" \e[1 q"
-"     let &t_SI=" \e[5 q"
-"     let &t_EI=" \e[1 q"
-"     let &t_te.=" \e[0 q"
 " endif
 " NERDTREE
 " map <F3> :NERDTreeToggle<CR>
 " map <C-F3> :NERDTreeFind<CR>
-" nmap <silent> <leader>k :NERDTreeToggle<cr>
-" nmap <silent> <leader>y :NERDTreeFind<cr>
-" let NERDTreeChDirMode=2
-" let NERDTreeQuitOnOpen=1
-" let NERDTreeShowBookmarks=1
-" let NERDTreeMinimalUI=0
-" let NERDTreeDirArrows=0
-" let NERDTreeAutoCenter=1
-" let NERDTreeShowFiles=1
-" let NERDTreeWinSize=30
+nmap <silent> <leader>k :NERDTreeToggle<cr>
+nmap <silent> <leader>y :NERDTreeFind<cr>
+let NERDTreeChDirMode=2
+let NERDTreeQuitOnOpen=1
+let NERDTreeShowBookmarks=1
+let NERDTreeMinimalUI=0
+let NERDTreeDirArrows=0
+let NERDTreeAutoCenter=1
+let NERDTreeShowFiles=1
+let NERDTreeWinSize=30
 
+" delimitMate
+let delimitMate_expand_cr=1
 
 " vim-which-key
 nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
@@ -150,23 +162,22 @@ nnoremap <silent> <leader>      :<c-u>WhichKey '<Space>'<CR>
 nnoremap <silent> <localleader> :<c-u>WhichKey  ','<CR>
 autocmd! FileType which_key
 autocmd  FileType which_key set laststatus=0 noshowmode noruler
-  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
-
+  \| autocmd BufLeave <buffer> set laststatus=2 showmode rule
 "coc-pairs
 autocmd FileType tex let b:coc_pairs = [[$", "$"]]
 autocmd FileType markdown let b:coc_pairs_disabled = ['`']
 
 "leaderF
 " dont show the help in normal mode
-let g:Lf_HideHelp = 1
+" let g:Lf_HideHelp = 1
 let g:Lf_UseCache = 0
 let g:Lf_UseVersionControlTool = 0
 let g:Lf_IgnoreCurrentBufferName = 1
 " popup mode
-" let g:Lf_WindowPosition = 'popup'
-" let g:Lf_PreviewInPopup = 1
-" let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
-" let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
+let g:Lf_WindowPosition = 'popup'
+let g:Lf_PreviewInPopup = 1
+let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
+let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
 
 let g:Lf_ShortcutF = "<leader>ff"
 noremap <leader>lf :LeaderfFunction!<CR>
@@ -174,6 +185,14 @@ noremap <leader>fb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
 noremap <leader>fm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
 noremap <leader>ft :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
 noremap <leader>fl :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
+
+" fzf
+noremap <leader>gf :Files<CR>
+noremap <leader>gb :Buffers<CR>
+noremap <leader>gc :Colors<CR>
+noremap <leader>gl :Lines<CR>
+noremap <leader>gh :History<CR>
+
 
 "indentLine
 nnoremap <silent><leader>i :IndentLinesToggle<CR>
@@ -189,6 +208,9 @@ let g:coc_explorer_global_presets = {
 \   },
 \   'pythonexe': {
 \       'root-uri': '~/pythonexe/',
+\   },
+\   'cppexe': {
+\       'root-uri': '~/cppexe/',
 \   },
 \   '.vim': {
 \      'root-uri': '~/.vim',
@@ -216,6 +238,7 @@ nmap <space>ed :CocCommand explorer --preset .vim<CR>
 nmap <space>es :CocCommand explorer --preset simplify<CR>
 nmap <space>ec :CocCommand explorer --preset cexe<CR>
 nmap <space>ep :CocCommand explorer --preset pythonexe<CR>
+nmap <space>ea :CocCommand explorer --preset cppexe<CR>
 
 " List all presets
 nmap <space>el :CocList explPresets<CR>
@@ -247,11 +270,11 @@ if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
 " unicode symbols
-" let"  g:airline_left_sep = '»'
+" let g:airline_left_sep = '»'
 " let g:airline_left_sep = '▶'
 " let g:airline_right_sep = '«'
 " let g:airline_right_sep = '◀'
-" let g:airline_symbols.crypt = '🔒'
+let g:airline_symbols.crypt = '🔒'
 " let g:airline_symbols.linenr = '␊'
 " let g:airline_symbols.linenr = '␤'
 " let g:airline_symbols.linenr = '¶'
@@ -261,10 +284,9 @@ endif
 " let g:airline_symbols.paste = 'ρ'
 " let g:airline_symbols.paste = 'Þ'
 " let g:airline_symbols.paste = '∥'
-" let g:airline_symbols.spell = 'Ꞩ'
+let g:airline_symbols.spell = 'Ꞩ'
 " let g:airline_symbols.notexists = ∄''
-" let g:airline_symbols.whitespace = 'Ξ'
-let g:ale_c_gcc_options = '-Wall -O2 -std=c99'
+let g:airline_symbols.whitespace = 'Ξ'
 let g:airline_left_sep = ''
 let g:airline_left_alt_sep = ''
 let g:airline_right_sep = ''
@@ -274,17 +296,21 @@ let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
 
 " Asynchronous Lint Engine
+let g:ale_enabled = 1
+let g:ale_disable_lsp = 0
 " let g:ale_linters_explicit = 1
 " let g:ale_completion_delay = 500
-" let g:ale_echo_delay = 20
-" let g:ale_lint_delay = 500
+let g:ale_echo_delay = 20
+let g:ale_lint_delay = 500
 " let g:ale_echo_msg_format = '[%linter%] %code: %%s'
-" let g:ale_lint_on_text_changed = 'normal'
-" let g:ale_lint_on_insert_leave = 1
-" let g:airline#extensions#ale#enabled = 1
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_insert_leave = 1
+let g:airline#extensions#ale#enabled = 1
 
-" let g:ale_c_gcc_options = '-Wall -O2 -std=c99'
-" let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++14'
+let g:ale_c_gcc_executable = 'gcc'
+let g:ale_c_gcc_options = '-Wall -std=c99'
+let g:ale_cpp_gcc_executable = 'g++'
+let g:ale_cpp_gcc_options = '-Wall -std=c++14'
 " let g:ale_c_cppcheck_options = ''
 " let g:ale_cpp_cppcheck_options = ''
 
@@ -304,13 +330,23 @@ let g:ale_statusline_format = ['X %d', '? %d', '']
 let g:ale_echo_msg_error_str='E'
 let g:ale_echo_msg_warning_str='W'
 let g:ale_echo_msg_format = '[%linter%] [%severity%]: %s'
-nnoremap <leader>an :ALENextWrap<cr>
-nnoremap <leader>ap :ALEPreviousWrap<cr>
+nnoremap <leader>an :ALENextWrap<cr><esc>
+nnoremap <leader>ap :ALEPreviousWrap<cr><esc>
 
 let g:ale_linters = {
+\   'c': ['ccls'],
+\   'cpp': ['ccls'],
 \   'javascript': ['eslint', 'flow', 'standard'],
 \   'typescript': ['tslint', 'tsserver']
-\}
+\ }
+
+let g:ale_c_ccls_executable = 'ccls'
+let g:ale_cpp_ccls_executable = 'ccls'
+let g:ale_cpp_ccls_init_options = {
+\   'cache':{
+\       'directory':'/home/sz/.tmp/ccls',
+\   }
+\ }
 
 " asynctasks
 let g:asyncrun_open=8
@@ -326,32 +362,27 @@ let g:asynctasks_term_cols = 80
 " coc config
 let g:coc_global_extensions = [
     \ 'coc-snippets',
-    \ 'coc-pairs',
     \ 'coc-tsserver',
     \ 'coc-eslint', 
     \ 'coc-prettier', 
     \ 'coc-json', 
+    \ 'coc-explorer',
     \ ]
-set hidden
-set nobackup
-set nowritebackup
-set cmdheight=2
-set updatetime=300
-" don't give |ins-completion-menu| messages.
-set shortmess+=c
 
 " always show signcolumns
 set signcolumn=yes
-noremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh() 
@@ -359,11 +390,13 @@ inoremap <silent><expr> <c-space> coc#refresh()
 " position. Coc only does snippet and additional edit on confirm.
 " if has('patch8.1.1068')
 "     " Use `complete_info` if your (Neo)Vim version supports it.
-"     inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" :
+"     inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>":
 "                 \ "\<C-g>u\<CR>"
 " else
-"     imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+"     inoremap <expr> <cr> pumvisible() ? "\<C-n>" : "\<C-g>u\<CR>"
 " endif
+
+inoremap <expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
@@ -393,8 +426,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+" xmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
     autocmd!
@@ -445,7 +478,7 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " Show all diagnostics.
 nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions.
-" nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+nnoremap <silent> <space>x  :<C-u>CocList extensions<cr>
 " Show commands.
 nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
 " Find symbol of current document.
@@ -466,8 +499,8 @@ set tags=./.tags;,.tags
 
 nnoremap <silent> <leader>nf :Neoformat<CR>
 let g:neoformat_c_uncrustify= {
-            \ 'exe': 'uncrustify',
-            \ 'args': ['-q', '-l c'],
+            \ 'exe': 'clang-format',
+            \ 'args': ['-style="~/.clang-format"'],
             \ 'stdin': 1,
             \ }
 " let g:neoformat_verbose = 1
