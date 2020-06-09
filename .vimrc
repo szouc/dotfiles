@@ -193,6 +193,10 @@ noremap <leader>gb :Buffers<CR>
 noremap <leader>gc :Colors<CR>
 noremap <leader>gl :Lines<CR>
 noremap <leader>gh :History<CR>
+noremap <leader>gt :Tags<CR>
+noremap <leader>gm :Marks<CR>
+noremap <leader>gs :Snippets<CR>
+noremap <leader>ga :Commands<CR>
 
 
 "indentLine
@@ -362,6 +366,7 @@ let g:asynctasks_term_cols = 80
 
 " coc config
 let g:coc_global_extensions = [
+    \ 'coc-lists',
     \ 'coc-clangd',
     \ 'coc-snippets',
     \ 'coc-tsserver',
@@ -381,7 +386,7 @@ imap <C-j> <Plug>(coc-snippets-expand-jump)
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? coc#_select_confirm() :
       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID><check_back_space() ? "\<TAB>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 
 function! s:check_back_space() abort
@@ -431,7 +436,7 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+" nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
     if (index(['vim','help'], &filetype) >= 0)
@@ -501,6 +506,10 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions.
 nnoremap <silent> <space>x  :<C-u>CocList extensions<cr>
+" Show source.
+nnoremap <silent> <space>r  :<C-u>CocList sources<cr>
+" Show location.
+nnoremap <silent> <space>l  :<C-u>CocList location<cr>
 " Show commands.
 nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
 " Find symbol of current document.
@@ -515,7 +524,7 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 "ctags
-set tags=./.tags;,.tags
+" set tags=./.tags;,.tags
 
 "Neoformat
 
@@ -529,6 +538,7 @@ let g:neoformat_c_uncrustify= {
 
 "gutentags
 " gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
+" noremap <leader>ge 
 let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
 " 所生成的数据文件的名称
 let g:gutentags_ctags_tagfile = '.tags'
