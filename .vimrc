@@ -8,6 +8,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'liuchengxu/vim-which-key'
 Plug 'easymotion/vim-easymotion'
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'joshdick/onedark.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-surround'
 Plug 'airblade/vim-gitgutter'
@@ -18,6 +19,7 @@ Plug 'preservim/nerdcommenter'
 Plug 'powerline/fonts'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+" Plug 'edkolev/tmuxline.vim'
 Plug 'Yggdroot/indentLine'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'jackguo380/vim-lsp-cxx-highlight'
@@ -106,6 +108,7 @@ set shortmess+=c
 
 set background=dark
 colorscheme PaperColor
+" colorscheme onedark
 function! ToggleBG()
     let s:tbg = &background
     if s:tbg == "dark"
@@ -117,6 +120,9 @@ endfunction
 noremap <leader>bg :call ToggleBG()<CR>
 
 let g:lsp_cxx_hl_use_text_props = 1
+
+nnoremap [b :bp<CR>
+nnoremap ]b :bn<CR>
 
 nnoremap <Up> <C-w>10+
 nnoremap <Down> <C-w>10-
@@ -161,9 +167,9 @@ set timeoutlen=500
 let g:maplocalleader = ','
 nnoremap <silent> <leader>      :<c-u>WhichKey '<Space>'<CR>
 nnoremap <silent> <localleader> :<c-u>WhichKey  ','<CR>
-autocmd! FileType which_key
-autocmd  FileType which_key set laststatus=0 noshowmode noruler
-  \| autocmd BufLeave <buffer> set laststatus=2 showmode rule
+" autocmd! FileType which_key
+" autocmd  FileType which_key set laststatus=0 noshowmode noruler
+"   \| autocmd BufLeave <buffer> set laststatus=2 showmode rule
 "coc-pairs
 autocmd FileType tex let b:coc_pairs = [[$", "$"]]
 autocmd FileType markdown let b:coc_pairs_disabled = ['`']
@@ -256,20 +262,28 @@ let g:NERDDefaultAlign = 'left'
 
 " airline
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#formatter = 'default'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_buffers = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
-nnoremap [b :bp<CR>
-nnoremap ]b :bn<CR>
 let g:airline#extensions#tabline#show_tabs = 0
 let g:airline#extensions#tabline#left_sep =  ''
 let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#coc#enabled = 1
+let g:airline#extensions#coc#error_symbol = 'E:'
+let g:airline#extensions#coc#warning_symbol = 'W:'
+let g:airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
+let g:airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
+let g:airline#extensions#nerdtree_status = 1
+let g:airline#extensions#tmuxline#enabled = 0
+
 " let g:airline#extensions#syntastic#enabled = 1
 " let g:airline#extensions#tagbar#enabled = 1
 " let g:airline_section_b = '%strftime{"(%c")}'
 " let g:airline_theme = 'solarized'
-" let g:airline_theme = 'PaperColor'
+let g:airline_theme = 'papercolor'
+" let g:airline_theme = 'onedark'
 " let g:airline_theme = 'pencil'
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
@@ -298,7 +312,10 @@ let g:airline_right_sep = ''
 let g:airline_right_alt_sep = ''
 let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
-let g:airline_symbols.linenr = ''
+let g:airline_symbols.linenr = '☰'
+let g:airline_symbols.maxlinenr = ''
+let g:airline_symbols.dirty='⚡'
+
 
 " Asynchronous Lint Engine
 let g:ale_enabled = 1
@@ -529,11 +546,18 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 "Neoformat
 
 nnoremap <silent> <leader>nf :Neoformat<CR>
-let g:neoformat_c_uncrustify= {
+let g:neoformat_c_clangformat = {
             \ 'exe': 'clang-format',
-            \ 'args': ['-style="~/.clang-format"'],
+            \ 'args': ['-style=file'],
             \ 'stdin': 1,
             \ }
+let g:neoformat_cpp_clangformat = {
+            \ 'exe': 'clang-format',
+            \ 'args': ['-style=file'],
+            \ 'stdin': 1,
+            \ }
+let g:neoformat_enabled_c = ['clangformat']
+let g:neoformat_enabled_cpp = ['clangformat']
 " let g:neoformat_verbose = 1
 
 "gutentags
