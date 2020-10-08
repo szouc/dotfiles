@@ -75,7 +75,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git autojump zsh-autosuggestions zsh-completions)
+plugins=(git autojump zsh-history-substring-search zsh-syntax-highlighting zsh-autosuggestions zsh-completions)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -108,7 +108,6 @@ alias cls="clear"
 alias gs="git status"
 alias gd="git diff"
 
-source /home/szouc/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # export PATH="/home/szouc/anaconda3/bin:$PATH"  # commented out by conda initialize
 
 # >>> conda initialize >>>
