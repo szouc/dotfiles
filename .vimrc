@@ -5,6 +5,7 @@ behave mswin
 
 filetype off
 call plug#begin('~/.vim/plugged')
+Plug 'dyng/ctrlsf.vim'
 Plug 'liuchengxu/vista.vim'
 Plug 'mhinz/vim-startify'
 Plug 'justinmk/vim-dirvish'
@@ -637,3 +638,14 @@ let g:vista#renderer#icons = {
 \  }
 
 noremap <leader>vi :Vista!!<CR>
+
+" CtrlSF
+
+nmap     <C-F>f <Plug>CtrlSFPrompt
+vmap     <C-F>f <Plug>CtrlSFVwordPath
+vmap     <C-F>F <Plug>CtrlSFVwordExec
+nmap     <C-F>n <Plug>CtrlSFCwordPath
+nmap     <C-F>p <Plug>CtrlSFPwordPath
+nnoremap <C-F>o :CtrlSFOpen<CR>
+nnoremap <C-F>t :CtrlSFToggle<CR>
+inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
