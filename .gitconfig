@@ -1,0 +1,6 @@
+[user]
+	email = qdshizh@gmail.com
+	name = Zheng Shi
+[core]
+	editor = code --wait
+	autocrlf = input

@@ -75,7 +75,17 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git autojump zsh-history-substring-search zsh-syntax-highlighting zsh-autosuggestions zsh-completions)
+plugins=(
+    git 
+    autojump 
+    zsh-history-substring-search 
+    zsh-syntax-highlighting 
+    zsh-autosuggestions 
+    zsh-completions 
+    docker 
+    docker-compose
+)
+    
 
 source $ZSH/oh-my-zsh.sh
 
@@ -105,8 +115,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias cls="clear"
-alias gs="git status"
-alias gd="git diff"
 
 # export PATH="/home/szouc/anaconda3/bin:$PATH"  # commented out by conda initialize
 
@@ -147,13 +155,18 @@ bindkey '\eL' forward-word
 bindkey '\eJ' beginning-of-line
 bindkey '\eK' end-of-line
 #
-bindkey -s '\eo' 'cd ..\n'
+# bindkey -s '\eo' 'cd ..\n'
 bindkey -s '\e;' 'll\n'
 #
 bindkey '\e[1;3D' backward-word
 bindkey '\e[1;3C' forward-word
 bindkey '\e[1;3A' beginning-of-line
 bindkey '\e[1;3B' end-of-line
+#
+bindkey '\ei' kill-word
+bindkey '\eo' kill-line
+bindkey '\eu' backward-kill-word
+bindkey '\ey' backward-kill-line
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
